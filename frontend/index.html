@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Namaste Bot 🎙️</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
+      color: #f5f5f5;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .container {
+      background: rgba(20, 20, 20, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0px 0px 30px rgba(0,0,0,0.6);
+      width: 380px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.3em;
+      color: #ff9800;
+      letter-spacing: 1px;
+    }
+    p {
+      opacity: 0.85;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+    button {
+      padding: 12px 18px; 
+      margin: 10px; 
+      border: none; 
+      border-radius: 8px; 
+      font-size: 1rem; 
+      cursor: pointer; 
+      transition: all 0.2s ease-in-out;
+    }
+    #start {
+      background: #4caf50;
+      color: white;
+    }
+    #stop {
+      background: #e53935;
+      color: white;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
+    }
+    #status {
+      margin-top: 15px; 
+      font-weight: bold;
+      padding: 10px; 
+      border-radius: 5px;
+      background: rgba(255,255,255,0.05);
+    }
+    audio {
+      margin-top: 15px; 
+      width: 100%;
+    }
+    .pulse {
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Namaste Bot !! </h1>
+    <p>Speak in English, Hindi, or Hinglish. Don’t dare to use any other language 😉</p>
+
+    <button id="start">Start Recording</button>
+    <button id="stop" disabled>Stop</button>
+    <div id="status">PROTOTYPE VERSION</div>
+    <audio id="player" controls style="display:none;"></audio>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById("start");
+    const stopBtn = document.getElementById("stop");
+    const status = document.getElementById("status");
+    const player = document.getElementById("player");
+
+    let mediaRecorder, chunks;
+
+    function updateStatus(message, color="#f5f5f5") {
+      status.innerText = message;
+      status.style.color = color;
+    }
+
+    startBtn.onclick = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        chunks = [];
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.start();
+        updateStatus("🎤 Recording... Speak now!", "#4caf50");
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        stopBtn.classList.add("pulse");
+      } catch (err) {
+        updateStatus("Mic error: " + err.message, "red");
+      }
+    };
+
+    stopBtn.onclick = async () => {
+      if (!mediaRecorder) return;
+      updateStatus("⏳ Processing audio...", "#ff9800");
+      mediaRecorder.stop();
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      stopBtn.classList.remove("pulse");
+
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: "audio/wav" });
+        const fd = new FormData();
+        fd.append("file", blob, "q.wav");
+
+        try {
+          const resp = await fetch("http://127.0.0.1:8000/voice", {
+            method: "POST",
+            body: fd
+          });
+          if (!resp.ok) throw new Error("Server error " + resp.status);
+          const audioBlob = await resp.blob();
+          const url = URL.createObjectURL(audioBlob);
+          player.src = url;
+          player.style.display = "block";
+          player.play();
+          updateStatus("▶️ Playing reply ☺️", "#00e5ff");
+        } catch (e) {
+          updateStatus("Error: " + e.message, "red");
+        }
+      };
+    };
+  </script>
+</body>
+</html>

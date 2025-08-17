@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+aiortc
+av
+aiofiles
+whisper
+sentence-transformers
+faiss-cpu
+PyPDF2
+python-dotenv
