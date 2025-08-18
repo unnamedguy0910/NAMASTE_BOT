@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NAMASTE_BOT — Your Funny College Voice Buddy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0a0a0f;            /* deep black */
+      --bg-soft:#0f0f18;       /* card bg */
+      --bg-glass:rgba(255,255,255,.06);
+      --text:#e7e7ff;          /* near-white */
+      --muted:#b5b5d6;         /* soft text */
+      --purple:#8b5cf6;        /* primary */
+      --purple-2:#7c3aed;      /* accent */
+      --pink:#ec4899;          /* accent 2 */
+      --neon:#c4b5fd;          
+      --radius:22px;
+      --shadow:0 10px 30px rgba(139,92,246,.25), 0 2px 8px rgba(0,0,0,.5);
+      --glow:0 0 30px rgba(124,58,237,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter,system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      color:var(--text); background:radial-gradient(1200px 600px at 70% -10%, rgba(124,58,237,.25), transparent 55%), radial-gradient(800px 400px at -10% 10%, rgba(236,72,153,.15), transparent 50%), linear-gradient(180deg, #09090e 0%, #0a0a12 100%);
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    .container{width:min(1160px, 92vw); margin-inline:auto}
+
+    /* ===== NAV ===== */
+    nav{ position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(12px); background:linear-gradient(180deg, rgba(10,10,16,.75), rgba(10,10,16,.35)); border-bottom:1px solid rgba(124,58,237,.18)}
+    .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:16px 0}
+    .brand{ display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:.5px }
+    .brand-badge{ width:40px; height:40px; display:grid; place-items:center; border-radius:12px; background:linear-gradient(135deg, var(--purple), var(--pink)); box-shadow:var(--glow) }
+    .brand svg{ filter:drop-shadow(0 2px 6px rgba(139,92,246,.35)) }
+    .nav-links{ display:flex; gap:22px; align-items:center}
+    .nav-links a{ color:var(--muted); font-weight:600; opacity:.9 }
+    .cta{ padding:10px 16px; border-radius:14px; border:1px solid rgba(139,92,246,.4); background:linear-gradient(180deg, rgba(139,92,246,.15), rgba(139,92,246,.05)); box-shadow:var(--shadow)}
+
+    /* ===== HERO ===== */
+    .hero{ position:relative; padding:72px 0 32px }
+    .grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:40px }
+    .title{ font-family:"Space Grotesk", Inter, system-ui; font-weight:800; line-height:1.05; font-size: clamp(34px, 4.2vw, 64px); letter-spacing:-.02em; }
+    .title .grad{ background:linear-gradient(90deg, var(--purple), var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 20px rgba(124,58,237,.25)}
+    .subtitle{ color:var(--muted); font-size:clamp(16px, 1.6vw, 20px); margin:14px 0 22px }
+    .cta-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center }
+    .btn{ padding:14px 18px; border-radius:14px; border:1px solid rgba(139,92,246,.4); font-weight:700; letter-spacing:.2px }
+    .btn.primary{ background:linear-gradient(135deg, rgba(139,92,246,.25), rgba(236,72,153,.18)); box-shadow:var(--glow) }
+    .btn.ghost{ background:rgba(255,255,255,.03) }
+    .chips{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap }
+    .chip{ padding:8px 12px; font-weight:700; font-size:12px; color:#e9e6ff; border:1px solid rgba(196,181,253,.45); border-radius:999px; background:linear-gradient(180deg, rgba(196,181,253,.18), rgba(196,181,253,.06))}
+
+    .phone{ position:relative; border-radius:28px; background:linear-gradient(180deg, #0f0f19, #0b0b12); padding:22px; border:1px solid rgba(139,92,246,.25); box-shadow:var(--shadow); overflow:hidden }
+    .phone-notch{ width:46%; height:24px; background:#0a0a12; border-radius:0 0 16px 16px; margin:0 auto 12px; border:1px solid rgba(255,255,255,.05)}
+    .screen{ border-radius:20px; border:1px solid rgba(255,255,255,.08); background:radial-gradient(800px 300px at -20% -40%, rgba(139,92,246,.35), transparent 40%), rgba(255,255,255,.03); padding:18px; min-height:360px; display:flex; flex-direction:column; gap:14px }
+    .wave{ height:84px; border-radius:16px; background:linear-gradient(180deg, rgba(139,92,246,.12), rgba(139,92,246,.04)); border:1px solid rgba(139,92,246,.35); position:relative; overflow:hidden }
+    .wave::before, .wave::after{ content:""; position:absolute; inset:0; background: repeating-linear-gradient(90deg, rgba(196,181,253,.25) 0 2px, transparent 2px 8px); opacity:.35 }
+    .wave .bar{ position:absolute; bottom:0; width:3px; border-radius:3px 3px 0 0; left:0; height:40%; animation:move 1.6s linear infinite }
+    @keyframes move{ from{ left:-10% } to{ left:110% } }
+    .lang{ display:flex; gap:8px }
+    .lang .chip{ border-color:rgba(139,92,246,.45)}
+    .roast{ font-style:italic; color:#d6ccff; opacity:.9 }
+
+    /* ===== SECTION WRAPPERS ===== */
+    section{ padding:72px 0 }
+    .section-title{ font-family:"Space Grotesk"; font-size:clamp(22px,2.6vw,34px); margin:0 0 16px }
+    .section-sub{ color:var(--muted); margin-bottom:26px }
+
+    /* ===== FEATURES ===== */
+    .features{ display:grid; grid-template-columns: repeat(4, 1fr); gap:18px }
+    .card{ background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border:1px solid rgba(139,92,246,.22); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); height:100% }
+    .card h3{ margin:8px 0 6px; font-size:18px }
+    .card p{ color:var(--muted); font-size:14px; line-height:1.55 }
+    .icon{ width:36px; height:36px; display:grid; place-items:center; border-radius:12px; background:linear-gradient(135deg, rgba(139,92,246,.35), rgba(236,72,153,.25)); border:1px solid rgba(139,92,246,.45); box-shadow:var(--glow) }
+
+    /* ===== DEMO ===== */
+    .demo{ display:grid; grid-template-columns: 1.2fr .8fr; gap:24px; align-items:stretch }
+    .demo .panel{ background:var(--bg-soft); border:1px solid rgba(139,92,246,.22); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow) }
+    .panel h4{ margin:0 0 10px; font-family:"Space Grotesk" }
+    .rec-ui{ border-radius:16px; border:1px dashed rgba(139,92,246,.45); padding:18px; background:rgba(255,255,255,.03); display:flex; flex-direction:column; gap:14px }
+    .rec-ctrls{ display:flex; gap:10px; flex-wrap:wrap }
+    .rec-btn{ cursor:pointer; border:none; font-weight:800; padding:12px 16px; border-radius:14px; display:flex; align-items:center; gap:10px; transition:transform .08s ease }
+    .rec-btn:active{ transform:translateY(1px) }
+    .rec-btn svg{ flex:0 0 auto }
+    .rec-btn.start{ background:linear-gradient(135deg, rgba(139,92,246,.35), rgba(236,72,153,.25)); border:1px solid rgba(139,92,246,.5) }
+    .rec-btn.stop{ background:rgba(255,255,255,.06); border:1px solid rgba(139,92,246,.35) }
+    .rec-state{ font-size:13px; color:var(--muted) }
+    .bubble{ align-self:flex-start; max-width: 95%; background:linear-gradient(180deg, rgba(139,92,246,.2), rgba(139,92,246,.08)); border:1px solid rgba(139,92,246,.35); padding:12px 14px; border-radius:14px; box-shadow:var(--glow) }
+    .wave-mini{ height:56px; background:linear-gradient(180deg, rgba(139,92,246,.12), rgba(139,92,246,.04)); border:1px solid rgba(139,92,246,.35); border-radius:14px; position:relative; overflow:hidden }
+    .wave-mini .bar{ position:absolute; bottom:0; width:2px; border-radius:2px 2px 0 0; background:linear-gradient(180deg, var(--neon), transparent); left:0; animation:move 1.4s linear infinite }
+
+    /* ===== HOW IT WORKS ===== */
+    .steps{ display:grid; grid-template-columns: repeat(4, 1fr); gap:18px }
+    .step{ padding:18px; border-radius:var(--radius); border:1px solid rgba(139,92,246,.24); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); box-shadow:var(--shadow) }
+    .step h5{ margin:6px 0 6px; font-size:16px }
+    .step p{ color:var(--muted); font-size:14px }
+    .step .num{ font-weight:900; font-size:12px; color:#e8e3ff; opacity:.8; letter-spacing:.08em }
+
+    /* ===== TECH ===== */
+    .badges{ display:flex; gap:10px; flex-wrap:wrap }
+    .badge{ padding:8px 12px; border-radius:999px; border:1px solid rgba(139,92,246,.35); background:linear-gradient(180deg, rgba(139,92,246,.15), rgba(139,92,246,.05)); font-weight:700; font-size:12px; color:#efeaff }
+
+    /* ===== FAQ ===== */
+    details{ border:1px solid rgba(139,92,246,.25); border-radius:16px; padding:14px 16px; background:rgba(255,255,255,.03) }
+    details+details{ margin-top:12px }
+    summary{ cursor:pointer; font-weight:700 }
+    details p{ color:var(--muted) }
+
+    /* ===== FOOTER ===== */
+    footer{ padding:54px 0; border-top:1px solid rgba(139,92,246,.18); background:linear-gradient(180deg, rgba(124,58,237,.08), rgba(124,58,237,0) 40%) }
+    .foot{ display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between }
+    .mini{ color:var(--muted); font-size:13px }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px){
+      .grid{ grid-template-columns:1fr }
+      .demo{ grid-template-columns:1fr }
+      .features{ grid-template-columns:1fr 1fr }
+      .steps{ grid-template-columns:1fr 1fr }
+    }
+    @media (max-width: 560px){
+      .features,.steps{ grid-template-columns:1fr }
+      .title{ font-size: clamp(32px, 8vw, 52px) }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== NAV ===== -->
+  <nav>
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true">
+          <!-- Mic Icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4Z" stroke="#fff" stroke-width="1.6" opacity=".95"/>
+            <path d="M19 10v1a7 7 0 1 1-14 0v-1" stroke="#fff" stroke-width="1.6" opacity=".9"/>
+            <path d="M12 18v3" stroke="#fff" stroke-width="1.6" opacity=".9"/>
+          </svg>
+        </div>
+        <span>NAMASTE_BOT</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#demo">Demo</a>
+        <a href="#how">How it works</a>
+        <a href="#tech">Tech</a>
+        <a href="#faq">FAQ</a>
+        <a class="cta" href="#demo">Try the Demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="container grid">
+      <div>
+        <h1 class="title">Your <span class="grad">Funny College Voice Buddy</span></h1>
+        <p class="subtitle">A voice assistant that speaks English, Hindi, and Hinglish — and roasts you (lightly) when you stray from the topic. Smart, sassy, and totally campus-coded.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="#demo">🎙️ Start Talking</a>
+          <a class="btn ghost" href="#features">See Features</a>
+        </div>
+        <div class="chips" aria-label="Supported languages">
+          <span class="chip">English</span>
+          <span class="chip">हिन्दी</span>
+          <span class="chip">Hinglish</span>
+        </div>
+      </div>
+
+      <!-- Phone mock -->
+      <div class="phone" aria-label="Demo phone mockup">
+        <div class="phone-notch" aria-hidden="true"></div>
+        <div class="screen">
+          <div class="wave" aria-hidden="true">
+            <div class="bar" style="left:10%; height:54%; background:linear-gradient(180deg, var(--neon), transparent);"></div>
+            <div class="bar" style="left:22%; height:38%; background:linear-gradient(180deg, var(--neon), transparent);"></div>
+            <div class="bar" style="left:34%; height:76%; background:linear-gradient(180deg, var(--neon), transparent);"></div>
+            <div class="bar" style="left:46%; height:32%; background:linear-gradient(180deg, var(--neon), transparent);"></div>
+            <div class="bar" style="left:58%; height:64%; background:linear-gradient(180deg, var(--neon), transparent);"></div>
+            <div class="bar" style="left:70%; height:28%; background:linear-gradient(180deg, var(--neon), transparent);"></div>
+            <div class="bar" style="left:82%; height:58%; background:linear-gradient(180deg, var(--neon), transparent);"></div>
+          </div>
+          <div class="lang">
+            <span class="chip">🎧 High‑fidelity STT</span>
+            <span class="chip">🧠 RAG on college data</span>
+          </div>
+          <p class="roast">“Bhai, syllabus pucho—cricket scores nahi. Focus karo, topper!”</p>
+          <div class="bubble">
+            <strong>NAMASTE_BOT:</strong> Attendance ki chinta chhodo, tum bolo—main bataata hoon.
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== FEATURES ===== -->
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">Features</h2>
+      <p class="section-sub">Built for campus chaos. Optimized for fun and correctness.
+      </p>
+      <div class="features">
+        <div class="card">
+          <div class="icon" aria-hidden="true">🎙️</div>
+          <h3>STT with 11Labs</h3>
+          <p>High‑fidelity speech‑to‑text for noisy corridors and canteens. Picks up your words, not the gossip.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">🧠</div>
+          <h3>RAG‑based Answers</h3>
+          <p>Backed by your college data—timetables, rules, announcements—so the answers are actually useful.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">😏</div>
+          <h3>Funny Fallback</h3>
+          <p>Out of scope? You get a short, witty reply that stays in your chosen language. Light roast, heavy laughs.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">🗣️</div>
+          <h3>11Labs Voice Cloning</h3>
+          <p>Answers delivered in your director’s voice. Respect ↑, excuses ↓.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DEMO ===== -->
+  <section id="demo">
+    <div class="container demo">
+      <div class="panel">
+        <h4>Try the mini demo (frontend mock)</h4>
+        <div class="rec-ui" role="region" aria-label="Recording controls">
+          <div class="rec-ctrls">
+            <button class="rec-btn start" id="btnStart" aria-pressed="false">
+              <!-- Mic Icon SVG -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4Z" stroke="#fff" stroke-width="1.6"/><path d="M19 10v1a7 7 0 1 1-14 0v-1" stroke="#fff" stroke-width="1.6"/><path d="M12 18v3" stroke="#fff" stroke-width="1.6"/></svg>
+              Start Recording
+            </button>
+            <button class="rec-btn stop" id="btnStop" disabled>
+              <!-- Stop Icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" ry="2" stroke="#fff" stroke-width="1.6"/></svg>
+              Stop & Reply
+            </button>
+          </div>
+          <div class="rec-state" id="recState">Ready. Click <strong>Start Recording</strong> to simulate.</div>
+          <div class="wave-mini" aria-hidden="true">
+            <div class="bar" style="height:60%"></div>
+            <div class="bar" style="left:12%; height:40%"></div>
+            <div class="bar" style="left:24%; height:70%"></div>
+            <div class="bar" style="left:36%; height:35%"></div>
+            <div class="bar" style="left:48%; height:65%"></div>
+            <div class="bar" style="left:60%; height:28%"></div>
+            <div class="bar" style="left:72%; height:58%"></div>
+            <div class="bar" style="left:84%; height:42%"></div>
+          </div>
+          <div id="reply" class="bubble" style="display:none"></div>
+          <audio id="beep" preload="auto" src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAAACQZAAACcGxheWJ1AAAAAAAAAAACAAACcQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"></audio>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h4>What happens under the hood?</h4>
+        <p class="mini">This demo is frontend‑only. Your real app will wire up the buttons to actual APIs.</p>
+        <ul>
+          <li>🎙️ <strong>STT</strong> — Stream mic audio → 11Labs for high‑fidelity transcription.</li>
+          <li>🧭 <strong>Router</strong> — Detect language (EN/HI/Hinglish) & intent.</li>
+          <li>📚 <strong>RAG</strong> — Retrieve from college knowledge base; craft a crisp answer.</li>
+          <li>😏 <strong>Fallback</strong> — If out‑of‑scope: short, witty roast, stays in language.</li>
+          <li>🗣️ <strong>TTS</strong> — 11Labs voice cloning renders the answer in your director’s voice.</li>
+        </ul>
+        <div style="height:10px"></div>
+        <div class="badges">
+          <span class="badge">11Labs STT</span>
+          <span class="badge">RAG (Vector DB)</span>
+          <span class="badge">TTS Voice Cloning</span>
+          <span class="badge">React/Next.js Frontend</span>
+          <span class="badge">Node.js Backend</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section id="how">
+    <div class="container">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">Simple pipeline. Campus‑grade results.</p>
+      <div class="steps">
+        <div class="step">
+          <span class="num">01 • Listen</span>
+          <h5>Capture & Transcribe</h5>
+          <p>Record the mic stream and send to 11Labs STT. Handles accents & background noise like a proctor.</p>
+        </div>
+        <div class="step">
+          <span class="num">02 • Think</span>
+          <h5>Retrieve & Reason</h5>
+          <p>Query your curated college data (syllabus, notices, FAQs) and compose a precise, cite‑able answer.</p>
+        </div>
+        <div class="step">
+          <span class="num">03 • Sass</span>
+          <h5>Funny Fallback</h5>
+          <p>If a question is off‑topic, deliver a crisp, witty line that nudges users back on track.</p>
+        </div>
+        <div class="step">
+          <span class="num">04 • Speak</span>
+          <h5>Voice Clone Delivery</h5>
+          <p>Return audio in your director’s cloned voice. Instant authority, zero confusion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq">
+    <div class="container">
+      <h2 class="section-title">FAQ</h2>
+      <details>
+        <summary>Does it really roast me?</summary>
+        <p>Lightly! Think senior‑style leg‑pulling—never rude, always useful, and only when you go off topic.</p>
+      </details>
+      <details>
+        <summary>Which languages are supported?</summary>
+        <p>English, Hindi, and Hinglish. Detection is automatic, switching mid‑question works too.</p>
+      </details>
+      <details>
+        <summary>Will it work in noisy spaces?</summary>
+        <p>Yes. 11Labs STT is robust to campus noise. Use your phone mic or a basic earbud mic.</p>
+      </details>
+      <details>
+        <summary>How do I connect my college data?</summary>
+        <p>Point the backend at your knowledge sources (docs, PDFs, portals). We embed metadata and keep it fresh.</p>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container foot">
+      <div class="brand" aria-label="brand footer">
+        <div class="brand-badge" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4Z" stroke="#fff" stroke-width="1.6"/>
+            <path d="M19 10v1a7 7 0 1 1-14 0v-1" stroke="#fff" stroke-width="1.6"/>
+            <path d="M12 18v3" stroke="#fff" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <span>NAMASTE_BOT</span>
+      </div>
+      <div class="mini">© <span id="year"></span> NAMASTE_BOT. Made with ❤️ + 😏 on campus.</div>
+    </div>
+  </footer>
+
+  <script>
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // demo mock interactions
+    const btnStart = document.getElementById('btnStart');
+    const btnStop = document.getElementById('btnStop');
+    const recState = document.getElementById('recState');
+    const reply = document.getElementById('reply');
+    const beep = document.getElementById('beep');
+
+    let isRecording = false;
+
+    function randomRoast(){
+      const lines = [
+        "Bro, question pucho—TED Talk nahi. 🌚",
+        "Focus yaar, syllabus idhar hai—memes baad mein. 😉",
+        "Topic pe raho, warna attendance bhi cut ho jayegi. 😏",
+        "Straight to the point, topper! ✨",
+        "Ye baat viva mein bolo, marks milenge? 🤨"
+      ];
+      return lines[Math.floor(Math.random()*lines.length)];
+    }
+
+    btnStart.addEventListener('click', () =>{
+      if(isRecording) return;
+      isRecording = true;
+      btnStart.setAttribute('aria-pressed','true');
+      btnStop.disabled = false;
+      recState.innerHTML = 'Listening… <em>(simulated)</em> Speak your query.';
+      reply.style.display = 'none';
+    });
+
+    btnStop.addEventListener('click', () =>{
+      if(!isRecording) return;
+      isRecording = false;
+      btnStart.setAttribute('aria-pressed','false');
+      btnStop.disabled = true;
+      recState.textContent = 'Thinking… (RAG + TTS simulation)';
+
+      // tiny pause then play a beep and show witty reply
+      setTimeout(()=>{
+        try{ beep.currentTime = 0; beep.play(); }catch(e){}
+        reply.style.display = 'block';
+        reply.innerHTML = `<strong>NAMASTE_BOT:</strong> ${randomRoast()} <br><small style="opacity:.75">(In real app, this would be your director\'s cloned voice.)</small>`;
+        recState.textContent = 'Ready. Ask another one!';
+      }, 700);
+    });
+  </script>
+</body>
+</html>
